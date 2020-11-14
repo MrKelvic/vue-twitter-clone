@@ -1,0 +1,369 @@
+<template>
+  <div v-if="twtOwner">
+      <div :style="(()=>{if(nest) return `border-bottom:1px solid #2f3336;`; return `margin-top:5px;`})()" class="twt-cont">
+        <div @click="handleTweetClick({name:'tweet',params:{id:tweet.id,tweet:tweet}},$event)" class="twt-bdy">
+            <div v-if="showOwn.hover" @mouseover="showOwn.hover=true" @mouseleave="showOwn.hover=false" class="owner-info">
+                <div class="ignore bioffsec">
+                    <div class="ignore owner-info-basic">
+                        <div class="ignore ">
+                            <router-link class="ignore " :to="{name:'user',params:{name:twtOwner.at,user:twtOwner}}">
+                                <img class="ignore " :src="require(`@/assets/${twtOwner.img[0]}`)" alt="">
+                                <p class="ignore white hvu" style="color:#d4d4d4 !important;">{{twtOwner.name}}</p>
+                                <router-link class="ignore " :to="{name:'user',params:{name:twtOwner.at,user:twtOwner}}">@{{twtOwner.at}}</router-link>
+                            </router-link>
+                        </div>
+                        <button class="ignore ffollowing"></button>
+                    </div>
+                    <div class="ignore ussum">
+                        <p class="ignore ">{{twtOwner.bio}}</p>
+                        <div class="ignore ffsect">
+                            <div class="ignore hvu"><span class="ignore white">{{twtOwner.ff}} </span>Following</div>
+                            <div class="ignore hvu" style="margin-left:10px;"><span class="ignore white">{{twtOwner.ffs}} </span>Followers</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div  @mouseover="showOwn.hover=true" v-if="!nest" class="u_act act c_grey">
+                <i class="fa fa-retweet"></i>
+                <router-link :to="{name:'user',params:{name:twtOwner.at,user:twtOwner}}">@{{tweet.owner}}</router-link>
+                <span>{{action}}</span>
+            </div>
+            <div class="fl">
+                <span class="fl-down"  :style="(()=>{if(tweet.type=='txt') return `height:67%;`;return `height:90%;`})()" v-if="properties.down"></span>
+                <!-- <span class="fl-down" :style="`height:${tweet.cnt.length};`" v-if="properties.down&&tweet.type!=='txt'"></span> -->
+                <img v-if="!twtOwner" :src="``" alt="">
+                <img v-if="twtOwner" :src="require(`@/assets/${twtOwner.img[0]}`)" alt="">
+                <div class="twt-sec">
+                    <div class="twt-own ut">
+                        <div @mouseover="showOwn.hover=true"  class="u_act">
+                            <p class="ue">{{twtOwner.name}}</p>
+                            <router-link :to="{name:'user',params:{name:twtOwner.at,user:twtOwner}}" class="c_grey">@{{twtOwner.at}}</router-link>
+                        </div>
+                        <span style="font-size:15px;" class="c_grey"> . 3h</span>
+                    </div>
+                    <div class="twt-cnt-bdy">
+                        <component :is="tweet.type" :content="tweet.cnt"></component>
+                    </div>
+                    <div class="interactions">
+                        <div>
+                            <div class="ignore interact cmt ch">
+                                <span class="ignore cmt-hov inter-icon">
+                                <i class="ignore fa fa-comment-o"></i>
+                                </span>
+                            <span class="ignore">{{tweet.cmnts.length+tweet.retweets.length}}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="ignore interact ret rh">
+                                <span class="ignore ret-hov inter-icon">
+                                <i class="ignore fa fa-retweet"></i>
+                                </span>
+                            <span class="ignore">{{tweet.props.rtwts+tweet.retweets.length}}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="ignore interact like lh">
+                                <span class="ignore like-hov inter-icon">
+                                <i class="ignore fa fa-heart-o"></i>
+                                </span>
+                            <span class="ignore">{{tweet.props.likes}}</span>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="ignore interact cmt ch">
+                                <span class="ignore cmt-hov inter-icon">
+                                <i class="ignore fa fa-share-alt"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div v-if="!properties.preview">
+            <!--  -->
+            <span v-if="tweet.cmnts.length!=0">
+            <!-- i!=(tweet.cmnts.length-1) -->
+                <tweets v-for="(cmt,i) in 1" :key="`${i}${tweet.cmnts[i].owner}`" :properties="{down:i!=0||tweet.cmnts.length==0}" :action="`replied`" :tweet="tweet.cmnts[i]" :nest="false"/>
+            </span>
+            <span v-if="tweet.retweets.length!=0">
+                <!-- i!=(tweet.retweets.length-1) -->
+                <tweets v-for="(rtw,i) in 1" :key="`${i}${tweet.retweets[i].owner}`" :properties="{down:i!=0||tweet.retweets.length==0||tweet.cmnts.length==0}" :action="`retweeted`" :tweet="tweet.retweets[i]" :nest="false"/>
+            </span>
+        </div>
+      </div>
+  </div>
+</template>
+
+<script>
+const txt=()=>import('@/components/tweetText.vue')
+const imge=()=>import('@/components/tweetImg.vue')
+const vid=()=>import('@/components/tweetVid.vue')
+const poll=()=>import('@/components/tweetPoll.vue')
+import tweets from '@/components/tweets.vue'
+import {searchUser} from '@/dataParser/deepSearch.js'
+export default {
+name: 'tweets',
+props: {
+    tweet:Object,
+    nest:Boolean,
+    action:String,
+    properties:Object
+},
+components:{
+    tweets,
+    txt,
+    imge,
+    poll,
+    vid
+},
+data(){
+    return{
+        twtOwner:null,
+        showOwn:{
+            hover:false,
+            who:null
+        }
+    }
+},
+methods:{
+    setUser(id){
+        return searchUser(id,this.$store.state.users)
+    },
+    handleTweetClick(route,$event){
+        if([...$event.target.classList].includes('ignore')) return 0;
+        this.$router.push(route)
+    }
+    // dohover(id,show){
+    //     this.showOwn.hover=show;
+    //     if(!show) return 0
+    //     this.showOwn.who=this.setUser(id)
+    // }
+},
+mounted(){
+    console.log('then ',this.tweet.owner,' ',this.tweet.id)
+    this.twtOwner=this.setUser(this.tweet.owner)
+    console.log('now ',this.twtOwner.at,' ',this.tweet.id)
+    // console.log(this.tweet)
+}
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+<style scoped>
+.twt-cont{
+ font-family:var(--font);
+ font-size:14px;
+}
+.twt-bdy{
+    transition:all 0.1s cubic-bezier(0.59, -0.21, 1, 1);
+    display:block;
+    /* background:green; */
+}
+.twt-bdy:hover{
+    cursor: pointer;
+    background:rgba(21,23,24);
+}
+.ut:hover .ue{
+    text-decoration:underline;
+}
+.u_act{
+    /* background:red; */
+    display:flex;
+    width:fit-content;
+}
+.act{
+    left:32px;
+    position:relative;
+}
+.act span{
+    margin:0px 5px;
+}
+.act i{
+    margin-right:14px;
+}
+.act a:hover{
+    text-decoration:underline;
+}
+.fl{
+    display:flex;
+    position: relative;
+    /* background:none !important; */
+}
+.twt-bdy{
+    padding:5px 15px;
+}
+.fl>img{
+    min-width:45px;
+    min-height:45px;
+    width:45px;
+    height:45px;
+    border-radius:50px;
+    margin-right:15px;
+    position:relative;
+    top:4px;
+}
+.twt-sec{
+    width:100%;
+}
+.twt-own{
+    display:inline-flex;
+    font-size:15px;
+    margin:5px 0px;
+}
+.twt-own p{
+    font-weight:600;
+}
+.twt-own a{
+    margin:0px 5px;
+    font-size:15px;
+}
+.twt-cnt-bdy{
+    margin-bottom:1px;
+}
+.interactions{
+    display:flex;
+    font-size:13px;
+    position:relative;
+    left:-13px;
+    color:grey;
+}
+.inter-icon{
+    font-size:16px;
+    margin-right:4px;
+    display: inline-flex;
+    padding:9px 9px 10px 9px;
+    border-radius:20px;
+}
+.interactions>div{
+    width:25%;
+    margin-left:5px;
+    text-align:left;
+}
+.cmt:hover{
+    color:rgba(29,161,242,1.0);
+}
+.ch:hover .cmt-hov{
+    background:#1da1f220;
+}
+.ret:hover{
+color:rgba(23,191,91);
+}
+.rh:hover .ret-hov{
+    background:#17bf5b20;
+}
+.like:hover{
+color:rgba(224,36,94);
+}
+.lh:hover .like-hov{
+    background:#e0245e20;
+}
+.interact{
+    width:fit-content;
+    transition:all 0.2s cubic-bezier(0.59, -0.21, 1, 1);
+}
+.interact:hover{
+    cursor:pointer;
+}
+.fl-down{
+    width: 2px;
+    background: #2f3336;
+    display: block;
+    position: absolute;
+    left: 20px;
+    top: 59px;
+    /* top: 54px; */
+}
+.owner-info{
+    color:#828282;
+    font-size: 14px;
+    z-index:1;
+    position:absolute;
+    max-width:260px;
+    padding:10px 15px;
+    background:var(--background);
+    border-radius:10px;
+    animation:fadein 0.2s linear backwards;
+}
+.owner-info img{
+    min-width:40px;
+    min-height:40px;
+    width:40px;
+    height:40px;
+    border-radius:50px;
+}
+.owner-info>div{
+}
+.owner-info-basic{
+   display: flex;
+   position:relative;
+}
+.owner-info-basic>button{
+    position:absolute;
+    right:10px;
+    /* background:var(--theme); */
+    /* color:#fff; */
+    font-weight:600;
+    font-family:var(--bold-font);
+    padding:6px 16px 9px 13px;
+    border-radius:20px;
+}
+.owner-info-basic>button:hover{
+    cursor:pointer;
+}
+.owner-info-basic>div>p{
+    margin:3px 0px;
+}
+.ussum p{
+   margin:10px 0px;
+   margin-bottom:15px;
+   color:#d4d4d4 !important;
+}
+.ffsect{
+    display:flex;
+    margin-bottom:13px;
+}
+/* .bioffsec>div{
+    
+} */
+.white{
+    color:#fff;
+    font-weight:600;
+}
+.hvu:hover{
+    text-decoration:underline;
+}
+.ffollow{
+    background:var(--background);
+    color:var(--theme);
+    border:1px solid var(--theme);
+}
+.ffollow:hover{
+    background:#1da1f220;
+}
+.ffollow::after{
+    content:"Follow";
+    /* background:green; */
+}
+.ffollowing{
+    border:1px solid var(--theme);
+    background:var(--theme);
+    color:#fff;
+}
+.ffollowing::after{
+    content:'Following';
+}
+.ffollowing:hover{
+    background:#B31D4B;
+    border:1px solid #B31D4B;
+}
+.ffollowing:hover:after{
+    content:'Unfollow';
+}
+@media only screen and (max-width:1250px){
+
+}
+@media only screen and (max-width: 480px){
+
+}
+</style>
