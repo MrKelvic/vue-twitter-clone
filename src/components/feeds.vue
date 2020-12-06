@@ -9,8 +9,14 @@
               <div>Tweeted</div>
           </div>
           <div class="head border-color">
-              <img @click="more=true" class="sm-show" :src="imagefix(this.$store.state.user.img[0])" alt="">
-              <h3>Home</h3><i class="fa fa-magic inactive"></i>
+              <button @click="more=true" style="padding:7px;font-size:1em;background:none;color:var(--color);" class="sm-show">
+                  <i style="top:unset;rigth:unset;" class="fa fa-navicon"></i>
+              </button>
+              <div class="fleet-container slideScroll">
+                  <fleets/>
+              </div>
+              <!-- <img   :src="imagefix(this.$store.state.user.img[0])" alt=""> -->
+              <!-- <i class="fa fa-magic inactive sm-pc"></i> -->
               </div>
           <div class="sm-hide">
               <composeTweet :compo="compo" :top="true" :tweetValue="tweetTemplate()(this.$store.state.user,'txt',null,{has:false,val:null},[])"/>
@@ -20,7 +26,7 @@
               <!-- <h4 v-for="(tweet,i) in $store.state.tweets" :key="i">
                   {{tweet.id}} : {{tweet.owner}}: index: {{i}}
               </h4> -->
-              <tweets v-for="tweet in $store.state.tweets" :key="tweet.id" :properties="{down:tweet.cmnts.length!=0||tweet.retweets.length!=0||tweet.thread.length!=0,preview:false,interactions:true}" :tweet="tweet" :nest="true"/>
+              <tweets style="animation:fadein 0.3s ease-in backwards;" v-for="tweet in $store.state.tweets" :key="tweet.id" :properties="{down:tweet.cmnts.length!=0||tweet.retweets.length!=0||tweet.thread.length!=0,preview:false,interactions:true}" :tweet="tweet" :nest="true"/>
               <p class="tweetsEnd">.</p>
           </div>
       </div>
@@ -79,6 +85,7 @@
 <script>
 import composeTweet from '@/components/composeTweet.vue';
 import tweets from '@/components/tweets.vue';
+import fleets from '@/components/fleets.vue';
 import {tweetTemplate} from '@/localedata/dataCreaters.js'
 import {imagefix,searchUser} from '@/dataParser/deepSearch.js'
 // {is:false,index,allow:false,catchPhrase:''}
@@ -89,7 +96,8 @@ export default {
     },
     components:{
         composeTweet,
-        tweets
+        tweets,
+        fleets
     },
   data(){
     return{
@@ -110,6 +118,8 @@ export default {
             return searchUser(id,this.$store.state.users)
         },
       setBub(){
+        //   console.log(window.pageYOffset)
+          if(window.pageYOffset<30) return 0;
           this.$store.dispatch('setMoreTweets',true)
       },
       tweetTemplate(){
@@ -142,6 +152,7 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+
 .newBubble{
     display:flex;
     background:var(--theme);
@@ -153,9 +164,13 @@ export default {
     max-width: 135px;
     padding:3px 10px;
     border-radius: 30px;
-    font-size: 0.9em;
+    font-size: 0.8em;
     place-items:center;
     background:var(--theme);
+}
+.newBubble i{
+    font-size:0.9em;
+    color:#fff;
 }
 .newBubble:hover{
     cursor:pointer;
@@ -174,7 +189,7 @@ export default {
     border-bottom:1px solid;
     display:flex;
     font-size:17px;
-    padding:15px 0px;
+    padding:6px 0px;
     position:sticky;
     top:0px;
     z-index:1;
@@ -193,7 +208,7 @@ export default {
 }
 .tweet_feeds{
     /* background:#202327; */
-    border-top:10px solid var(--bdc);
+    border-top:3px solid var(--bdc);
     width:100%;
 }
 .head img{
@@ -258,6 +273,11 @@ export default {
     color:var(--theme);
     border:1px solid var(--theme);
 }
+.fleet-container{
+    width:100%;
+    padding:4px 2px;
+    overflow: auto;
+}
 @media only screen and (max-width:1250px){
 
 }
@@ -265,11 +285,15 @@ export default {
     .newBubble{
     left:50%;
 }
+.tweet_feeds{
+    border-top:1px solid var(--bdc);
+}
     .head{
-    padding:10px 0px;
+    padding:4px 0px;
 }
 .head i{
     right:3%;
 }
 }
+
 </style>

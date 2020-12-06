@@ -134,13 +134,13 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .dot{
-    width:10px;
-    height:10px;
+    width:8px;
+    height:8px;
     border-radius:40px;
     background:var(--theme);
     position: absolute;
-    top: 24%;
-    right: 20%;
+    top:13%;
+    right:12%;
 }
 .menu{
     margin-left:3.4em;
@@ -166,24 +166,27 @@ export default {
     overflow-x: hidden;
     width: 100%;
     display: grid;
-   grid-template-rows: minmax(460px,60%) minmax(auto,20%) auto
+   grid-template-rows: minmax(430px,60%) minmax(auto,20%) auto;
+   /* grid-template-rows: minmax(460px,60%) minmax(auto,20%) auto; */
+   /* grid-template-rows: minmax(460px,60%) minmax(auto,20%) auto; */
     /* grid-template-rows:minmax(505px,75%) minmax(auto,15%); */
 }
 .menu ul{
     /* background:yellow; */
     display:flex;
     flex-wrap: wrap;
+    /* height:40%; */
 }
 .menu li{
     margin:1px 0px;
     padding:1px 0px;
     /* background:blue; */
     width:100%;
-    font-size:1.25em;
+    font-size:1.21em;
     /* font-family:var(--bold-font); */
 }
 .menu li div{
-    /* padding:10px 17px 9px 12px; */
+    /* padding:7px 18px 7px 15px; */
      padding:10px 18px 9px 15px;
     width:fit-content;
     /* background:yellow; */
@@ -315,6 +318,9 @@ export default {
 }
 .lll{
     top:unset;
+}
+.mmhold[data-v-4babae50] {
+    grid-template-rows: minmax(430px,70%) minmax(auto,20%) auto;
 }
 }
 @media only screen and (max-width:760px){

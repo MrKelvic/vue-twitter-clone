@@ -67,6 +67,7 @@ export default {
       let tweet=tweetTemplate({},'txt',null,{has:false,val:null},[])
       tweet.cnt[0]=`Hello there,
 All dull links and buttons are still under development... for now feel free to try these features
+0. Fleet!!!!. (still under review tho).
 1.Tweet (poll,image,text).
 2.Like,Retweet( with or without comment).
 3.Follow and unfollow.
@@ -80,19 +81,19 @@ thank you.
 // Hey... not bad ${navigator.platform} nice OS, erm connection type ${navigator.connection?.effectiveType||`well I don't know that`}, ${(()=>{if(navigator.cookieEnabled)return 'cookie enabled'; return 'awwn cookie disabled'})()}
       // `
       this.$store.dispatch('addTweet',tweet)
-    },1000)
+    },2000)
      setTimeout(()=>{
       let tweet=tweetTemplate({},'txt',null,{has:false,val:null},[])
       tweet.cnt[0]=`NB:This is a clone built for learning purposes.
 I thought it would be cool if twitter was built on my favourite framework (Vue) so I cloned it in VueJs.
 This clone has no backed attatched or any form of browser storage so any form of tweet would be lost on a refresh`
       this.$store.dispatch('addTweet',tweet)
-    },1200)
+    },4000)
     setTimeout(()=>{
       let tweet=tweetTemplate({},'txt',null,{has:false,val:null},[])
       tweet.cnt[0]=`Oh and yh this is still under development feel free too crush it (wink) ;) `
       this.$store.dispatch('addTweet',tweet)
-    },1300)
+    },6000)
     // console.log(window.onorientationchange)
     // if('onorientationchange' in window){
     //   window.addEventListener('onorientationchange',(e)=>this.run(e))
@@ -106,22 +107,7 @@ This clone has no backed attatched or any form of browser storage so any form of
 1125-big screeen
 480-mobile
 */
-:root{
-  --theme:#1da1f2;
-  --bold-font:'Roboto',system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Ubuntu, "Helvetica Neue", sans-serif;
-  --background:#14202b;
-  --color:#fff;
-  /* --background:#000; */
-  /* --color:#fff; */
-  --hove:#0000000f;
-  --font:sans-serif;
-  --grey:#828282;
-  --altback:#182734;
-  --bdc:#2f3336;
-  --shadow:0px 0px 6px 2px #00000054;
-  --themehove:#1da1f252;
-  /* 2f3336 */
-}
+
 *{
   margin:0px;
   padding:0px;
@@ -188,6 +174,9 @@ ul{
   }
 button{
   border:none;    
+}
+button:hover{
+  cursor:pointer;
 }
 a{
   text-decoration:none;
@@ -311,6 +300,26 @@ color:var(--color);
     width:100%;
     height:1px;
     background:var(--color);
+}
+.slideScroll{
+  scroll-behavior:smooth;
+}
+.slideScroll::-webkit-scrollbar {
+    width:2px;
+    height:2px;
+}
+.slideScroll::-webkit-scrollbar-track {
+  background:transparent;
+}
+
+/* Handle */
+.slideScroll::-webkit-scrollbar-thumb {
+    background:var(--theme);
+}
+
+/* Handle on hover */
+.slideScroll::-webkit-scrollbar-thumb:hover {
+    background:transparent; 
 }
 @media only screen and (max-width:1250px){
   .sm-pc{

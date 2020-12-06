@@ -1,10 +1,11 @@
 import Vue from 'vue';
 import Vuex from 'vuex';
-import twts from '@/localedata/tweets.js';
 import { users } from '@/localedata/users.js';
-import { middleWare, editUserTweet } from '@/dataParser/mutateData.js';
+import twts from '@/localedata/tweets.js';
+import FLEET from '@/localedata/fleets.js';
+import { middleWare, editUserTweet,fleet } from '@/dataParser/mutateData.js';
 // import { tweetTemplate } from '@/localedata/dataCreaters.js';
-// console.log(middleWare)
+// console.log(FLEET)
 // console.table(twts)
 Vue.use(Vuex);
 
@@ -14,11 +15,13 @@ export default new Vuex.Store({
         tweets: twts,
         users: users,
         user: users.find(e => e.at === 'mrkelvic'),
+        fleets:FLEET,
         mods: {
             showScroll: true,
             displayEdit: false,
             userEdit: false,
             moreTweet: false,
+            fleetTweetId:null,
             imageView: {
                 event: 'tweet', //tweet,image
                 content: null,
@@ -68,6 +71,9 @@ export default new Vuex.Store({
                 //reduce
             }
         },
+        fleetCRUD(state,payload){
+            state.fleet=fleet(payload.action,payload.userat,payload.payload,state.fleets)
+        },
         // Modifications
         toggletweetAndThread(state, obj) {
             state.mods.tweetAndThread.action = obj.action;
@@ -110,6 +116,9 @@ export default new Vuex.Store({
         },
         setMoreTweets(state, bool) {
             state.mods.moreTweet = bool;
+        },
+        setFleetTweet(state,payload){
+            state.mods.fleetTweetId=payload
         }
     },
     actions: {
@@ -145,6 +154,9 @@ export default new Vuex.Store({
         followOrUnfollowUser({ commit }, index) {
             commit('followOrUnfollowUser', index)
         },
+        fleetCRUD({commit},payload){
+            commit("fleetCRUD",payload)
+        },
         // Modifications
         toggletweetAndThread({ commit }, obj) {
             // {bool:true,params:this.tweet,action:T(tweet/thread),R(retweet),C(comment)}
@@ -165,6 +177,9 @@ export default new Vuex.Store({
         },
         setMoreTweets({ commit }, bool) {
             commit('setMoreTweets', bool)
+        },
+        setFleetTweet({commit},payload){
+            commit('setFleetTweet',payload)
         }
     },
     getters: {

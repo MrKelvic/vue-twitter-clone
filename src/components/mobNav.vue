@@ -9,21 +9,21 @@
                 </div>
             </router-link>
         </li>
-        <li>
+        <li class="inactive">
             <router-link to="/">
                 <div class="a_div">
                     <i class="fa fa-search"></i>
                 </div>
             </router-link>
         </li>
-        <li>
+        <li class="inactive">
             <router-link to="/">
                 <div class="a_div">
                     <i class="fa fa-bell"></i>
                 </div>
             </router-link>
         </li>
-        <li>
+        <li class="inactive">
             <router-link to="/">
                 <div class="a_div">
                     <i class="fa fa-envelope"></i>
@@ -66,13 +66,13 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .dot{
-    width:10px;
-    height:10px;
+    width:9px;
+    height:9px;
     border-radius:40px;
     background:var(--theme);
     position: absolute;
-    top: 5%;
-    right: -15%;
+    top:-25%;
+    right:-30%;
 }
 .menu{
     font-family: var(--bold-font);
@@ -107,12 +107,12 @@ export default {
     background:var(--theme);
     color:#fff;
     position:fixed;
-    bottom:10%;
+    bottom:9%;
     right:2%;
     font-size:1.1em;
     border-radius:50px;
-    width:50px;
-    height:50px;
+    width:41px;
+    height:41px;
     padding:0px 3px 0px 0px;
 }
 @media only screen and (max-width:760px){

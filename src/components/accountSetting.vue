@@ -59,7 +59,8 @@ img{
 .pc_acc{
     position: relative;
     margin-top:20px;
-    bottom:-35px;
+    bottom:-95px;
+    /* bottom:-35px; */
     width: 100%;
     /* background:green; */
 }

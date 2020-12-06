@@ -109,6 +109,20 @@ return{
 }
 },
 methods:{
+  keyboardInteract(event){
+    if(event.keyCode===37){
+      // leftArrow
+      this.handleIndex(-1)
+    }
+    if(event.keyCode===39){
+      // rightArrow
+      this.handleIndex(1)
+    }
+    if(event.keyCode===27){
+      // exit
+      this.$store.dispatch('setViewImage',{event:'tweet',content:null,show:false,index:0})
+    }
+  },
   handleMount(){
     if(this.$store.state.mods.imageView.event=='tweet'){
       // console.log('got index of ',this.$store.state.mods.imageView.index)
@@ -175,8 +189,19 @@ methods:{
 },
 mounted(){
   this.handleMount();
+  // @keydown="keyboardInteract"
+  window.onkeyup=this.keyboardInteract;
+  // console.log()
+/*
+  tweet link with caption
+*/
+  // window.addEventListener('keypress',this.keyboardInteract)
   // console.log(this.tweet.cnt[1].imgs[this.mod.index])
 },
+destroyed(){
+  window.onkeyup=null
+  // window.removeEventListener('keypress')
+}
 }
 </script>
 

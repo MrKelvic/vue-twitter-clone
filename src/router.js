@@ -20,22 +20,32 @@ export default new Router({
     routes: [{
             path: '/',
             name: 'root',
-            component: loadView('HomeRoute'), //viewMainCat,
+            component: loadView('HomeRoute'),
             props: false
         },
         {
-            // :to="{name:'user',params:{name:at,user:user}}"
             path: '/user/:name',
             name: 'user',
-            component: loadView('userRoute'), //viewMainCat,
+            component: loadView('userRoute'),
             props: true
         },
         {
-            // :to="{name:'tweet',params:{id:tweet.id,tweet:tweet}}"
             path: '/tweet/:id',
             name: 'tweet',
-            component: loadView('tweetRoute'), //viewMainCat,
+            component: loadView('tweetRoute'),
             props: true
+        },
+        {
+            path: '/fleet/:owner',
+            name: 'fleetView',
+            component: loadView('fleetView'),
+            props: true
+        },
+        {
+            path: '/createfleet',
+            name: 'createFleet',
+            component: loadView('createFleetsRoute'),
+            // props:true
         },
         // {
         //   path: '/about',

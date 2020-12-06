@@ -2,7 +2,7 @@
     <div v-if="twtOwner">
       <div :style="(()=>{if(nest) return `border-bottom:1px solid;`; return ``})()" class="twt-cont border-color">
           <!-- margin-top:5px; -->
-        <div @click="handleTweetClick({name:'tweet',params:{id:tweet.id,tweet:tweet}},$event)" class="twt-bdy">
+        <div data-focusable="true" tabindex="0" v-on:keyup.enter="handleTweetClick({name:'tweet',params:{id:tweet.id,tweet:tweet}},$event)" @click="handleTweetClick({name:'tweet',params:{id:tweet.id,tweet:tweet}},$event)" :class="(()=>{if(properties.isFleet){return 'twt-bdy nopadding'}else{ return 'twt-bdy'}; })()">
             <div v-if="showOwn.hover"  @mouseover="showOwn.hover=true" @mouseleave="showOwn.hover=false">
                 <userInfo :userObj="twtOwner" class="ignore bioffsec"/>
                 <!-- here -->
@@ -12,7 +12,7 @@
                 <router-link :to="{name:'user',params:{name:twtOwner.at,user:twtOwner}}">@{{tweet.owner}}</router-link>
                 <span>{{action}}</span>
             </div>
-            <div class="fl">
+            <div :class="(()=>{if(properties.isFleet&&tweet.type==`imge`){return 'fl fl-fleet-contrl'}else{ return 'fl'}; })()">
                 <span class="fl-down"  :style="(()=>{if(tweet.type=='txt') return `height:67%;`;return `height:90%;`})()" v-if="!properties.preview&&properties.down&&(tweet.cmnts.length>1||tweet.retweets.length>1)||tweet.thread.length!=0"></span>
                 <span class="fl-down" :style="`height:85%;top: 45px;`" v-if="properties.bruteDown"></span>
                 <img v-if="!twtOwner" :src="``" alt="">
@@ -23,8 +23,9 @@
                             <p class="ue">{{twtOwner.name}}</p>
                             <router-link :to="{name:'user',params:{name:twtOwner.at,user:twtOwner}}" class="c_grey">@{{twtOwner.at}}</router-link>
                         </div>
+                        <span style="margin:0px 4px 0px 0px;width:2px;height:2px;border-radius:20px;background:var(--color);"></span>
                         <!-- <time :datetime="tweet.time">{{tweet.time}}</time> -->
-                        <span style="font-size:15px;" :title="tweet.time.toDateString()" class="c_grey"><time :datetime="tweet.time">{{setTweetTime(tweet.time)}}</time></span>
+                        <span style="font-size:15px;" :title="tweet.time.toDateString()" class="c_grey">{{setTweetTime(tweet.time)}}</span>
                     </div>
                     <div class="twt-cnt-bdy">
                         <component :is="tweet.type" :content="tweet.cnt" :tweetId="tweet.id" :Atweet="(()=>{if(tweet.type=='imge') return tweet; return undefined;})()"></component>
@@ -37,8 +38,8 @@
                             </div>
                         </span>
                     </span>
-                    <div v-if="properties.interactions" class="interactions">
-                        <div :style="(()=>{if(isPreview) return 'width:unset;'})()">
+                    <div :style="(()=>{if(properties.isFleet) return 'place-content: space-between;'})()" v-if="properties.interactions" class="interactions">
+                        <div :style="(()=>{if(isPreview||properties.isFleet) return 'width:unset;'})()">
                             <div class="ignore interact cmt ch">
                                 <button @click="handleInteraction('C',false)" class="ignore cmt-hov inter-icon">
                                 <i class="ignore fa fa-comment-o"></i>
@@ -46,22 +47,22 @@
                             <span class="ignore">{{tweet.cmnts.length+tweet.retweets.length}}</span>
                             </div>
                         </div>
-                        <div :style="(()=>{if(isPreview) return 'width:unset;'})()">
-                            <div class="inter-options ignore rtscreen shadow" v-if="mods.rt">
+                        <div :style="(()=>{if(isPreview||properties.isFleet) return 'width:unset;'})()">
+                            <div tabindex="1" class="inter-options ignore rtscreen shadow" v-if="mods.rt">
                                 <div>
                                     <button class="ignore" @click="handleInteraction('R',false)"><i class="fa fa-retweet ignore"></i> {{(()=>{if(tweet.props.isrwt) return `Undo Retweet`; return 'Retweet';})()}}</button>
-                                    <button class="ignore" @click="handleInteraction('RC',false)"><i class="fa fa-pencil ignore"></i> Retweet with comment</button>
+                                    <button class="ignore" @click="handleInteraction('RC',false)"><i class="fa fa-pencil ignore"></i> Quote Tweet</button>
                                     <button @click="mods.rt=false" class=" cc ignore">cancel</button>
                                 </div>
                             </div>
                             <div class="ignore interact ret rh" :style="(()=>{if(tweet.props.retweetedBy.includes($store.state.user.at)) return `color:rgba(23,191,91);`;})()">
-                                <button @click="handleInteraction('R',true)" class="ignore ret-hov inter-icon">
+                                <button @click="handleInteraction('R',true);mods.fleet=false" class="ignore ret-hov inter-icon">
                                 <i class="ignore fa fa-retweet"></i>
                                 </button>
                             <span class="ignore">{{tweet.props.rtwts+tweet.retweets.length}}</span>
                             </div>
                         </div>
-                        <div :style="(()=>{if(isPreview) return 'width:unset;'})()">
+                        <div :style="(()=>{if(isPreview||properties.isFleet) return 'width:unset;'})()">
                             <div class="ignore interact like lh" :style="(()=>{if(tweet.props.likedBy.includes($store.state.user.at)) return `color:rgba(224,36,94);`;})()">
                                 <button @click="handleInteraction('L',false)" class="ignore like-hov inter-icon">
                                 <i class="ignore fa fa-heart-o"></i>
@@ -69,9 +70,15 @@
                             <span class="ignore">{{tweet.props.likes}}</span>
                             </div>
                         </div>
-                        <div :style="(()=>{if(isPreview) return 'width:unset;'})()">
-                            <div class="ignore interact cmt ch inactive">
-                                <button @click="handleInteraction('S',false)" class="ignore cmt-hov inter-icon" style="padding:9px 12px 9px 9px;">
+                        <div v-if="!properties.isFleet" :style="(()=>{if(isPreview) return 'width:unset;'})()">
+                            <div tabindex="1" class="inter-options ignore rtscreen shadow" v-if="mods.fleet">
+                                <div>
+                                    <button class="ignore" @click="$store.dispatch('setFleetTweet',tweet.id);$router.push({name:'createFleet'})">Share in a Fleet</button>
+                                    <button @click="mods.fleet=false" class=" cc ignore">cancel</button>
+                                </div>
+                            </div>
+                            <div class="ignore interact cmt ch">
+                                <button @click="handleInteraction('S',false);mods.fleet=true;mods.rt=false" class="ignore cmt-hov inter-icon" style="padding:9px 12px 9px 9px;">
                                 <i class="ignore fa fa-share-alt"></i>
                                 </button>
                             </div>
@@ -111,7 +118,7 @@ const vid=()=>import('@/components/tweetVid.vue')
 const poll=()=>import('@/components/tweetPoll.vue')
 const userInfo=()=>import('@/components/personInfo.vue')
 import tweets from '@/components/tweets.vue'
-import {searchUser,imagefix} from '@/dataParser/deepSearch.js'
+import {searchUser,imagefix,time} from '@/dataParser/deepSearch.js'
 export default {
 name: 'tweets',
 props: {
@@ -138,16 +145,14 @@ data(){
             who:null
         },
         mods:{
-            rt:false
+            rt:false,
+            fleet:false
         }
     }
 },
 methods:{
-    setTweetTime(time){
-        let calc =Math.round((((new Date()-time) % 86400000) % 3600000) / 60000);
-        if(calc==0) return 'now';
-        if(calc>60) return calc%60+'hrs';
-        return calc+'min';
+    setTweetTime(date){
+       return time(date);
     },
     imagefix(par){
         return imagefix(par)
@@ -268,6 +273,9 @@ img{
     position: relative;
     /* background:none !important; */
 }
+.fl-fleet-contrl{
+    width:400px;
+}
 .twt-bdy{
     padding:5px 15px;
 }
@@ -285,9 +293,11 @@ img{
     width:100%;
 }
 .twt-own{
-    display:inline-flex;
-    font-size:15px;
-    margin:5px 0px;
+   display: flex;
+    font-size: 15px;
+    place-items: center;
+    margin: 5px 0px;
+    width: fit-content;
 }
 .twt-own p{
     font-weight:600;
@@ -305,6 +315,7 @@ img{
     position:relative;
     left:-13px;
     color:grey;
+    margin-top:3px;
 }
 .inter-icon{
     font-size:16px;
@@ -457,20 +468,17 @@ color:rgba(23,191,91);
     background:#44424280;
 }
 .rtscreen>div{
-    position:absolute;
+      position: absolute;
     bottom: 0%;
-    height: 25%;
-    /* bottom:0px;
-    height:22%; */
-    left:0px;
-    width:100%;
-    border-top-right-radius:30px;
-    border-top-left-radius:30px;
-    background:var(--background);
-    padding-top:25px;
+    height: fit-content;
+    left: 0px;
+    width: 100%;
+    border-top-right-radius: 30px;
+    border-top-left-radius: 30px;
+    background: var(--background);
+    padding: 25px 0px;
     text-align: center;
-    display:block;
-    /* background:red; */
+    display: block;
 }
 .rtscreen button{
     /* width:100%; */
@@ -481,6 +489,19 @@ color:rgba(23,191,91);
 .cc{
     width:88%;
     border-radius:30px;
+}
+.nopadding{
+    padding:0px !important;
+}
+}
+@media only screen and (max-width: 425px){
+.fl-fleet-contrl{
+    width:320px;
+}
+}
+@media only screen and (max-width:340px){
+.fl-fleet-contrl{
+    width:unset;
 }
 }
 </style>

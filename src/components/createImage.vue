@@ -108,7 +108,7 @@ mounted(){
   bottom:2%;
   left:2%;
   font-size:0.8em;
-  background:#000000ba;
+  background:#fbfbfbad;
   padding:4px 9px;
   border-radius:20px;
 }

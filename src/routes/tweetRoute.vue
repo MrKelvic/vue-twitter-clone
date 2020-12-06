@@ -39,7 +39,14 @@
               <tweets class="mainTwt-cnt border-color" :properties="{down:false,preview:true,interactions:false}" :tweet="Tweet.main" :nest="false"/>
             </div>
             <div class="time bb-down border-color">
-              <p class="c_grey" :title="Tweet.def.time.toDateString()" ><time :datetime="Tweet.def.time" >{{setTweetTime(Tweet.def.time)}}</time></p>
+              <p style="display:flex;place-items: center;" class="c_grey">
+                <span :title="Tweet.def.time.toTimeString().split(' ')[0]">{{Tweet.def.time.toTimeString().split(' ')[0]}}</span>
+                <span style="display:inline-block;margin:0px 5px;width:2px;height:2px;border-radius:20px;background:var(--color);"></span>
+                <span :title="Tweet.def.time.toDateString()">{{Tweet.def.time.toDateString()}}</span>
+                <span style="display:inline-block;margin:0px 5px;width:2px;height:2px;border-radius:20px;background:var(--color);"></span>
+                <span class="tfw">Twitter for Web</span>
+                <!-- <time :datetime="Tweet.def.time" >{{setTweetTime(Tweet.def.time)}}</time> -->
+              </p>
             </div>
             <div :style="(()=>{if(isPreview) return 'font-size:13px;'})()" class="rwtandlikes bb-down border-color">
               <span>{{Tweet.def.props.rtwts}} <span class="c_grey">Retweets</span> </span>
@@ -53,14 +60,14 @@
                 </span>
               </div>
               <div style="position:relative;" class="interact ret">
-                <div style="width:215px;" class="inter-options ignore rtscreen" v-if="mods.rt">
-                    <div class="shadow" style="width:100%;">
+                <div tabindex="1" style="width:215px;" class="inter-options ignore rtscreen shadow" v-if="mods.rt">
+                    <div class="" style="width:100%;">
                         <button class="ignore" @click="handleInteraction('R',false)"><i class="fa fa-retweet ignore"></i> {{(()=>{if(Tweet.def.props.isrwt) return `Undo Retweet`; return 'Retweet';})()}}</button>
                         <button class="ignore" @click="handleInteraction('RC',false)"><i class="fa fa-pencil ignore"></i>Quote Tweet</button>
                         <button @click="mods.rt=false" class=" cc ignore">cancel</button>
                     </div>
                 </div>
-                <span @click="handleInteraction('R',true)" class="ignore ret-hov inter-icon" :style="(()=>{if(Tweet.def.props.retweetedBy.includes($store.state.user.at)) return `color:rgba(23,191,91);`;})()">
+                <span @click="handleInteraction('R',true);mods.fleet=false" class="ignore ret-hov inter-icon" :style="(()=>{if(Tweet.def.props.retweetedBy.includes($store.state.user.at)) return `color:rgba(23,191,91);`;})()">
                   <i class="ignore fa fa-retweet"></i>
                 </span>
               </div>
@@ -69,8 +76,14 @@
                   <i class="ignore fa fa-heart-o"></i>
                 </span>
               </div>
-              <div class="interact cmt ch inactive">
-                <span @click="handleInteraction('S',false)" class="ignore cmt-hov inter-icon" style="padding:9px 12px 9px 9px;">
+              <div style="position:relative;" class="interact cmt ch inactive">
+                <div style="width:215px;right:0%;" tabindex="1" class="inter-options ignore rtscreen shadow" v-if="mods.fleet">
+                    <div style="width:100%;">
+                        <button class="ignore" @click="$store.dispatch('setFleetTweet',Tweet.def.id);$router.push({name:'createFleet'})">Share in a Fleet</button>
+                        <button @click="mods.fleet=false" class=" cc ignore">cancel</button>
+                    </div>
+                </div>
+                <span @click="handleInteraction('S',false);mods.fleet=true;mods.rt=false" class="ignore cmt-hov inter-icon" style="padding:9px 12px 9px 9px;">
                   <i class="ignore fa fa-share-alt"></i>
                 </span>
               </div>
@@ -134,7 +147,8 @@ export default {
         showTop:false,
         userIndex:null,
         mods:{
-          rt:false
+          rt:false,
+          fleet:null,
         }
     }
   },
@@ -244,6 +258,13 @@ export default {
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+.tfw{
+  font-size:1.1em;
+  color:var(--tags);
+}
+.tfw:hover{
+  cursor:default;
+}
 .mini-nav{
     font-family:var(--bold-font);
     width:100%;
@@ -330,14 +351,14 @@ export default {
   
 }
 .time p{
-  font-size:15px;
+  font-size:14px;
 }
 .bb-down{
   border-bottom:1px solid;
   padding:15px 5px;
 }
 .rwtandlikes{
-  font-size:19px;
+  font-size:17px;
 }
 .rwtandlikes span:nth-child(1){
   margin-right:10px;
@@ -352,6 +373,7 @@ export default {
 .interactions div{
   width:25%;
   text-align:center;
+  opacity:1;
 }
 .inter-icon{
   /* background:red; */
@@ -411,7 +433,7 @@ export default {
 .cc{
     width:100%;
     text-align:center !important;
-    /* background:var(--altback) !important; */
+    background:var(--altback) !important;
 }
 @media only screen and (max-width:1250px){
 
@@ -433,20 +455,17 @@ export default {
     width:100% !important;
 }
 .rtscreen>div{
-    position:absolute;
+    position: absolute;
     bottom: 0%;
-    height: 25%;
-    /* bottom:0px;
-    height:22%; */
-    left:0px;
-    width:100% !important;
-    border-top-right-radius:30px;
-    border-top-left-radius:30px;
-    background:var(--background);
-    padding-top:25px;
+    height: fit-content;
+    left: 0px;
+    width: 100%;
+    border-top-right-radius: 30px;
+    border-top-left-radius: 30px;
+    background: var(--background);
+    padding: 25px 0px;
     text-align: center;
-    display:block;
-    /* background:red; */
+    display: block;
 }
 .rtscreen button{
     width:100%;

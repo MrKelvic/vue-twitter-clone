@@ -1,91 +1,3 @@
-/*
-   {
-        owner: 'mrkelvic',
-        type: 'txt',
-        cnt: `This could end up as a thread maybe`,
-        cmnts: [],
-        retweets: [],
-        thread: [{
-                owner: 'mrkelvic',
-                type: 'txt',
-                cnt: `Ohh look a thread`,
-                cmnts: [],
-                retweets: [],
-                time: new Date(),
-                props: {
-                    islike: true,
-                    isrwt: true,
-                    likes: parseInt((Math.random() * 300) + 200),
-                    rtwts: parseInt((Math.random() * 300) + 200),
-                }
-            },
-            {
-                owner: 'mrkelvic',
-                type: 'txt',
-                cnt: `I don't know what to say :(`,
-                cmnts: [],
-                retweets: [],
-                time: new Date(),
-                props: {
-                    islike: true,
-                    isrwt: true,
-                    likes: parseInt((Math.random() * 300) + 200),
-                    rtwts: parseInt((Math.random() * 300) + 200),
-                }
-            },
-            {
-                owner: 'mrkelvic',
-                type: 'txt',
-                cnt: `I'll end it here`,
-                cmnts: [],
-                retweets: [],
-                time: new Date(),
-                props: {
-                    islike: true,
-                    isrwt: true,
-                    likes: parseInt((Math.random() * 300) + 200),
-                    rtwts: parseInt((Math.random() * 300) + 200),
-                }
-            },
-        ],
-        time: new Date(),
-        props: {
-            islike: true,
-            isrwt: true,
-            likes: parseInt((Math.random() * 300) + 200),
-            rtwts: parseInt((Math.random() * 300) + 200),
-        }
-    },
-    owner:at
-    type:poll,imge,txt,vid,
-    cnt:[],{imgs:[]}
-    cmnts:__self,
-    retweets:__self,
-    time:,
-    props:{
-        islike:,
-        isrwt:,
-        likes:,
-        rtwts:,
-    }
-*/
-/*
-{
-    owner: '',
-    type: 'txt',
-    cnt: ``,
-    cmnts: [],
-    retweets: [],
-    time: new Date(),
-    props: {
-        islike: true,
-        isrwt: true,
-        likes: parseInt((Math.random() * 300) + 200),
-        rtwts: parseInt((Math.random() * 300) + 200),
-    }
-},
-
-*/
 let { ats } = require('./users.js');
 let tweets = [{
         owner: 'traversymedia',
@@ -223,7 +135,7 @@ But you absolutely have the ability to do this.
 You are incredible!
 Time to show yourself how amazing YOU are!
 
-You absolutely got this!🙏🏽Red heart`,
+You absolutely got this!🙏🏽`,
         cmnts: [{
             owner: 'maker_avneesh',
             type: 'txt',
@@ -538,4 +450,7 @@ function recurse(tweet, track, id) {
 tweets = tweets.map((e, index) => { return recurse(e, [index], index) })
     // let id = `${index}${Date.now()}`;
     // console.log(tweets)
+
+//linear-gradient(20deg, #060606e3, #bb2d2df2,#00BCD5)
+// console.log(tweets);
 module.exports = tweets;

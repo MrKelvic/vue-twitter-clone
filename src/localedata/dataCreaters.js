@@ -35,4 +35,28 @@ function tweetTemplate(own, type, track, main, thread) {
 function user(name, at, bio, img) {
     return { name: `${name}`, at: `${at}`, bio: `${bio}`, img: [...img], isff: false, fb: false, joined: new Date().toDateString(), bell: false, ff: parseInt((Math.random() * 10) + 100), ffs: parseInt((Math.random() * 10) + 100) };
 }
-module.exports = { tweetTemplate, user }
+function fleet(id,type,data,styles){
+    return {id:id,type:type,data:data,styles:styles};
+    // Object.keys(styles).forEach(e=>{fleet.styles.push([e,styles[e]])});
+    // return fleet;
+    /*
+        {
+                type:'imge',//['txt','imge',twt]
+                cordinates:[0,0],//
+                dim:[320,340],
+                data:'_tt2.jpg',
+            },
+            {
+                type:'twt',//['txt','imge',twt]
+                cordinates:[25,25],//
+                dim:[120,140],
+                data:tweet.id,
+            },
+            {
+                data:'Bus',
+                type:'txt',
+                cordinates:[10,40]//[x%,y%]
+            }
+    */
+}
+module.exports = { tweetTemplate, user,fleet }

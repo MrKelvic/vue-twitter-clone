@@ -140,5 +140,32 @@ let votePoll = (add, mutator, index) => {
     mutator.cnt[1].voted.has = true;
     mutator.cnt[1].voted.opt = index;
 }
-module.exports = { middleWare, editUserTweet }
+let fleet=(action,userat,payload,ALL)=>{
+    let index=ALL.findIndex(e=>e.owner==userat);
+    if(index==-1&&action=="ADD"){
+        payload.time=new Date();
+        payload.viewed=false;
+        ALL.push({
+            cont:[payload],
+            owner:userat,
+        });//new fleet
+        return ALL;
+    }
+    if(index==-1) return ALL;
+    if(action=="ADD"){
+        //add contents
+        payload.time=new Date();
+        payload.viewed=false;
+        ALL[index].cont.push(payload);
+    }
+    if(action=="DELCONT"){
+        //delet a particular fleet post
+        ALL[index].cont=ALL[index].cont.filter(e=>e.id!=payload.id);
+    }
+    if(action=="DEL"){
+        ALL=ALL.filter(e=>e.owner!=userat);
+    }
+    return ALL;
+}
+module.exports = { middleWare, editUserTweet,fleet }
     // middleWare(false, '7-r0-c1-1', twts)

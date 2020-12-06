@@ -7,25 +7,25 @@
             <img @click="viewImage(0)" class="ignore " :src="imagefix(content[1].imgs[0])" alt="">
           </div>
           <div v-if="content[1].imgs.length==1&&!toImg" class="ignore one">
-            <div @click="viewImage(0)" class="ignore rad" :style="`background:url(${imagefix(content[1].imgs[0])});background-size:cover;background-position: center;`"></div>
+            <div @click="viewImage(0)" class="ignore rad" :style="`background:url(${imagefix(content[1].imgs[0])}) 50% 50% / cover;background-position: center;`"></div>
           </div>
           <div v-if="content[1].imgs.length==2" class="ignore two">
-            <div @click="viewImage(i)" class="ignore " v-for="(image,i) in content[1].imgs" :key="i" :style="`background:url(${imagefix(image)});background-size:cover;`"></div>
+            <div @click="viewImage(i)" class="ignore " v-for="(image,i) in content[1].imgs" :key="i" :style="`background:url(${imagefix(image)}) 50% 50% / cover;`"></div>
           </div>
           <div v-if="content[1].imgs.length==3" class="ignore three">
             <div class="ignore ">
-              <div @click="viewImage(i)" class="ignore " v-for="i in [0]" :key="i" :style="`background:url(${imagefix(content[1].imgs[i])});background-size:cover;`"></div>
+              <div @click="viewImage(i)" class="ignore " v-for="i in [0]" :key="i" :style="`background:url(${imagefix(content[1].imgs[i])}) 50% 50% / cover;`"></div>
             </div>
             <div class="ignore ">
-              <div @click="viewImage(i)" class="ignore " v-for="i in [1,2]" :key="i" :style="`background:url(${imagefix(content[1].imgs[i])});background-size:cover;`"></div>
+              <div @click="viewImage(i)" class="ignore " v-for="i in [1,2]" :key="i" :style="`background:url(${imagefix(content[1].imgs[i])}) 50% 50% / cover;`"></div>
             </div>
           </div>
           <div v-if="content[1].imgs.length==4" class="ignore four">
             <div class="ignore ">
-              <div @click="viewImage(i)" class="ignore " v-for="i in [0,1]" :key="i" :style="`background:url(${imagefix(content[1].imgs[i])});background-size:cover;`"></div>
+              <div @click="viewImage(i)" class="ignore " v-for="i in [0,1]" :key="i" :style="`background:url(${imagefix(content[1].imgs[i])}) 50% 50% / cover;`"></div>
             </div>
             <div class="ignore ">
-              <div @click="viewImage(i)" class="ignore " v-for="i in [2,3]" :key="i" :style="`background:url(${imagefix(content[1].imgs[i])});background-size:cover;`"></div>
+              <div @click="viewImage(i)" class="ignore " v-for="i in [2,3]" :key="i" :style="`background:url(${imagefix(content[1].imgs[i])}) 50% 50% / cover;`"></div>
             </div>
           </div>
         </div>

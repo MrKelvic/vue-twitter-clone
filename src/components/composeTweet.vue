@@ -24,7 +24,7 @@
                 <div>
                     <button title="upload image" @click="handleImage(true,null)"><i class="fa fa-image"></i></button>
                     <button class="inactive"><i class="fa fa-video-camera"></i></button>
-                    <input @input="handleImage(false,$event)" :id="custId()" type="file" multiple>
+                    <input @input="handleImage(false,$event)" :id="custId()" accept="image/*" type="file" multiple>
                     <button v-if="top" @click="$store.dispatch(`setPostType`,'poll')" title="Poll"><i class="fa fa-align-left"></i></button>
                 </div>
                 <div class="ex__">

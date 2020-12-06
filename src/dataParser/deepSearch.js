@@ -1,3 +1,18 @@
+let time=(time,string)=>{
+    //    return new Intl.RelativeTimeFormat('en',{style:'narrow'}).format(true,'day')}
+    //    time=Math.round((new Date(time)-new Date())/(24*60*60*1000));
+        let calc =Math.round((((new Date()-time) % 86400000) % 3600000) / 60000);
+        if(calc<1) return 'now';
+        if(calc==1) return calc+(string?" min "+string:"mins");
+        if(calc>1) return calc+(string?" mins "+string:"mins");
+        if(calc>60) return calc+(string?" hours "+string:"hours");
+        // return calc+'min';
+}
+let getFleet=(userat,ALL)=>{
+    let index=ALL.findIndex(e=>e.owner==userat);
+    if(index==-1) return null;
+    return {data:ALL[index],index:index};
+}
 let searchUser = (id, list) => {
     for (let i = 0; i < list.length; ++i) {
         if (id === list[i].at) {
@@ -70,4 +85,4 @@ let imagefix = (par) => {
     if (par[0] == '_') return require(`@/assets/${par}`);
     return par;
 }
-module.exports = { searchUser, getTweet, createInview, iter, imagefix }
+module.exports = { searchUser, getTweet, createInview, iter, imagefix,time,getFleet }
